@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.CusDevMethodDao">
+    <cache readOnly="true" />
+	<resultMap type="CusDevMethod" id="CusDevMethodResult">
+		<result property="id" column="id"/>
+		<result property="content" column="content"/>
+		<result property="cost" column="cost" />
+		<result property="createMan" column="createMan" />
+	</resultMap>
+	
+	<select id="findCusDevMethod" parameterType="Map" resultMap="CusDevMethodResult">
+		select * from t_cus_dev_method
+	</select>
+	
+	<select id="getTotalCusDevMethod" parameterType="Map" resultType="Long">
+		select count(*) from t_cus_dev_method
+	</select>
+	
+	<insert id="addCusDevMethod" parameterType="CusDevMethod">
+		insert into t_cus_dev_method values(null,#{content},#{cost},#{createMan})
+	</insert>
+	
+	<update id="updateCusDevMethod" parameterType="CusDevMethod">
+		update t_cus_dev_method set content=#{content},cost=#{cost},createMan=#{createMan} where id=#{id}
+	</update>
+	
+	<delete id="deleteCusDevMethod" parameterType="Integer">
+		delete from t_cus_dev_method where id=#{id}
+	</delete>
+	
+	<select id="findById" parameterType="Integer" resultType="CusDevMethod">
+		select * from t_cus_dev_method where id=#{id}
+	</select>
+
+</mapper> 

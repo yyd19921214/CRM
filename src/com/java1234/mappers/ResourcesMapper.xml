@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.ResourcesDao">
+    <cache readOnly="true" />
+	<resultMap type="Resources" id="ResourcesResult">
+	    <result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="parentId" column="parentId" />
+		<result property="resKey" column="resKey"/>
+		<result property="type" column="type"/>
+		<result property="resUrl" column="resUrl"/>
+		<result property="level" column="level"/>
+		<result property="description" column="description"/>
+	</resultMap>
+	
+	<select id="queryAll" parameterType="Map" resultMap="ResourcesResult">
+		select * from t_resources
+	</select>
+	
+	<select id="queryResourcesByUser" parameterType="Map" resultMap="ResourcesResult">
+		select * from t_resources WHERE id in(SELECT resc_id FROM t_res_roles WHERE roleName=#{roleName})
+	</select>
+	
+	
+
+</mapper> 

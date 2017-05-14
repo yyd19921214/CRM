@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.MessageDao">
+	<resultMap type="Message" id="MessageResult">
+	    <result property="id" column="id"/>
+		<result property="content" column="content"/>
+		<result property="type" column="type" />
+		<result property="createTime" column="createTime"/>
+		<result property="procTime" column="procTime"/>
+		<result property="state" column="state"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+	
+	<select id="findMessage" parameterType="Map" resultMap="MessageResult">
+		select * from t_message
+		<where>
+			<if test="type!=null and type!=' ' ">
+				and type = #{type}
+			</if>
+			<if test="state!=null and state!=' ' ">
+				and state = #{state}
+			</if>
+			<if test="createTimefrom!=null and createTimefrom!='' ">
+				and createTime &gt;= #{createTimefrom}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTotalMessage" parameterType="Map" resultType="Long">
+		select count(*) from t_message
+	</select>
+	
+	<insert id="addMessage" parameterType="Message">
+		insert into t_message values(null,#{content},#{type},#{createTime},#{procTime},#{state},#{remark})
+	</insert>
+	
+	<update id="updateMessage" parameterType="Message">
+		update t_message set content=#{content},type=#{type},createTime=#{createTime},procTime=#{procTime},state=#{state} where id=#{id}
+	</update>
+	
+	<select id="findById" parameterType="Integer" resultType="Message">
+		select * from t_message where id=#{id}
+	</select>
+	
+
+</mapper> 

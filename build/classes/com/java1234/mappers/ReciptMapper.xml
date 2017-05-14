@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.ReciptDao">
+    <cache readOnly="true" />
+	<resultMap type="Recipt" id="ReciptResult">
+	    <result property="id" column="id"/>
+		<result property="changeType" column="changeType"/>
+		<result property="person" column="person" />
+		<result property="changeTime" column="changeTime"/>
+		<result property="count" column="count"/>
+		<result property="remark" column="remark"/>
+		<association property="warehouse" column="warehouseId" select="com.java1234.dao.WarehouseDao.findById"></association>
+		<association property="product" column="productId" select="com.java1234.dao.ProductDao.findById"></association>
+	</resultMap>
+	
+	<select id="findRecipt" parameterType="Map" resultMap="ReciptResult">
+		select * from t_recipt
+		<where>
+			<if test="changeType!=null and changeType!=' ' ">
+				and changeType = #{changeType}
+			</if>
+			<if test="count!=null and count!=' ' ">
+				and count = #{count}
+			</if>
+			<if test="person!=null and person!='' ">
+				and person like #{person}
+			</if>
+			<if test="remark!=null and remark!='' ">
+				and remark like #{remark}
+			</if>
+			<if test="warehouseId!=null and warehouseId!=' ' ">
+				and warehouseId = #{warehouseId}
+			</if>
+			<if test="productId!=null and productId!=' ' ">
+				and productId = #{productId}
+			</if>
+			<if test="warehouseName!=null and warehouseName!='' ">
+			    and warehouseId IN (SELECT id FROM t_warehouse WHERE
+				warehouseName like #{warehouseName} )
+			</if>
+			<if test="productName!=null and productName!='' ">
+				and productId IN (SELECT id FROM t_product WHERE
+				productName like #{productName} )
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTotalRecipt" parameterType="Map" resultType="Long">
+		select count(*) from t_recipt
+	</select>
+
+	<select id="findByProperty" parameterType="Map" resultMap="ReciptResult">
+		select * from t_recipt
+		<where>
+			<if test="warehouseName!=null and warehouseName!='' ">
+				and warehouseId IN (SELECT id FROM t_warehouse WHERE
+				warehouseName=#{warehouseName})
+			</if>
+			<if test="productName!=null and productName!='' ">
+				and productId IN (SELECT id FROM t_product WHERE
+				productName=#{productName})
+			</if>
+		</where>
+	</select>
+	
+	
+	<insert id="addRecipt" parameterType="Recipt">
+		insert into t_recipt values(null,#{warehouse.id},#{product.id},#{changeType},#{person},#{changeTime},#{count},#{remark})
+	</insert>
+	
+	<update id="updateRecipt" parameterType="Recipt">
+		update t_recipt set changeType=#{changeType},person=#{person},changeTime=#{changeTime},count=#{count},remark=#{remark} where id=#{id}
+	</update>
+	
+	<delete id="deleteRecipt" parameterType="Integer">
+		delete from t_recipt where id=#{id}
+	</delete>
+	
+	<select id="findById" parameterType="Integer" resultType="Recipt">
+		select * from t_recipt where id=#{id}
+	</select>
+
+</mapper> 
